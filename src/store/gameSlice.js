@@ -96,6 +96,9 @@ export const gameSlice = createSlice({
     setUserPoint(state, action) {
       state.game.points = action.payload;
     },
+    forNotAuthenticatedSetUserPoint(state, action) {
+      state.game.points += 1;
+    },
   },
 });
 
@@ -114,6 +117,7 @@ export const {
   cancelhandler,
   setLeaderBoard,
   setUserPoint,
+  forNotAuthenticatedSetUserPoint,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

@@ -3,6 +3,7 @@ import {
   catCard,
   endDeck,
   exitGame,
+  forNotAuthenticatedSetUserPoint,
   initiateDeck,
   initiateExplodingAction,
   restartGame,
@@ -30,6 +31,9 @@ export const asyncDrawGame = (deck, diffusecard) => {
         currentcard.type != "explodingKitten"
       ) {
         dispatch(setGamewon());
+        if (!store.getState().auth.isAuthenticated) {
+          dispatch(forNotAuthenticatedSetUserPoint());
+        }
       }
       if (currentcard.type === "cat") {
         temp.pop();
@@ -45,6 +49,9 @@ export const asyncDrawGame = (deck, diffusecard) => {
         } else {
           if (temp.length === 1) {
             dispatch(setGamewon());
+            if (!store.getState().auth.isAuthenticated) {
+              dispatch(forNotAuthenticatedSetUserPoint());
+            }
           } else {
             temp.pop();
             dispatch(afterDiffuse(temp));
