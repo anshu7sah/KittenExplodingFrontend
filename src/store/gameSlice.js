@@ -8,11 +8,6 @@ const cardDeck = [
 ];
 
 const initialState = {
-  auth: {
-    isAuthenticated: true,
-    username: "exampleUser",
-    errorMessage: null,
-  },
   game: {
     inGame: false,
     deck: [],
@@ -95,6 +90,12 @@ export const gameSlice = createSlice({
       state.game.gamewon = false;
       state.game.deck = [];
     },
+    setLeaderBoard(state, action) {
+      state.game.leaderboard = [...action.payload];
+    },
+    setUserPoint(state, action) {
+      state.game.points = action.payload;
+    },
   },
 });
 
@@ -111,6 +112,8 @@ export const {
   endDeck,
   endExplodingAction,
   cancelhandler,
+  setLeaderBoard,
+  setUserPoint,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

@@ -4,7 +4,8 @@ import { thunk } from "redux-thunk";
 import storage from "redux-persist/lib/storage";
 import { persistReducer } from "redux-persist";
 import game from "./gameSlice";
-const reducers = combineReducers({ game });
+import auth from "./authSlice";
+const reducers = combineReducers({ game, auth });
 
 const config = {
   key: "game",
@@ -16,7 +17,10 @@ const reducer = persistReducer(config, reducers);
 const store = configureStore({
   reducer: reducer,
   devTools: process.env.NODE_ENV !== "production",
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(thunk),
 });
 
 export default store;

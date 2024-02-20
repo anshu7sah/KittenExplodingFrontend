@@ -1,7 +1,10 @@
 // SignUp.js
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Assuming you are using react-router for navigation
+import { setUser } from "../store/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +12,15 @@ const SignUp = () => {
     email: "",
     password: "",
   });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((e) => e.auth);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,8 +30,26 @@ const SignUp = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const response = await fetch(`http://localhost:4000/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+    const json = await response.json();
+    if (response.ok) {
+      console.log(json);
+      dispatch(setUser(json));
+      setFormData({
+        username: "",
+        email: "",
+        password: "",
+      });
+      navigate("/");
+    }
   };
 
   return (

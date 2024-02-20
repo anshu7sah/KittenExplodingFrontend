@@ -8,8 +8,12 @@ import {
   restartGame,
   setDiffuseCard,
   setGamewon,
+  setLeaderBoard,
+  setUserPoint,
 } from "./gameSlice";
 import store from "../store/index";
+import axios from "axios";
+import { logout } from "./authSlice";
 
 export const asyncDrawGame = (deck, diffusecard) => {
   return (dispatch) => {
@@ -49,5 +53,41 @@ export const asyncDrawGame = (deck, diffusecard) => {
       }
       dispatch(endDeck());
     }, 2500);
+  };
+};
+
+export const updateScores = () => {
+  return async (dispatch) => {
+    const token = store.getState().auth.jwtToken;
+    try {
+      const { data } = await axios.get("http://localhost:4000/updatescore", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (data) {
+        console.log(data);
+        console.log("successfully updated scores");
+      }
+    } catch (error) {
+      dispatch(logout());
+      console.log(error);
+    }
+  };
+};
+
+export const getAllScores = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.get("http://localhost:4000/getallscores");
+      dispatch(setLeaderBoard(data));
+      const getUser = store.getState().auth;
+      if (getUser.isAuthenticated) {
+        const userPoint = data.find((d) => d.email === getUser.email);
+        dispatch(setUserPoint(userPoint.points));
+      }
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
   };
 };
