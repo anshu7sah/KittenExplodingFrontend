@@ -46,8 +46,6 @@ const Game = () => {
   const temp = [...leaderboard];
   const topHighScores = temp.sort((a, b) => b.points - a.points).slice(0, 10);
 
-  // Placeholder value, replace with actual authentication check
-
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
